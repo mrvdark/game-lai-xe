@@ -1,0 +1,73 @@
+<html>
+<head>
+    <script src="tank.js"></script>
+    <script src="keys.js"></script>
+    <script type="text/javascript">
+        const AVAILABLE_KEYS =
+            [   Keys.UP_ARROW,
+                Keys.DOWN_ARROW,
+                Keys.LEFT_ARROW,
+                Keys.RIGHT_ARROW
+            ];
+
+        var _canvas;
+        var _context;
+        var _ball;
+        var _keypressed = {};
+
+        function clear() {
+            _context.clearRect(0, 0, _canvas.width, _canvas.height);
+        }
+
+        function init() {
+            _canvas = document.getElementById("canvas");
+            _context = _canvas.getContext("2d");
+            _ball = new Tank(_canvas.width,_canvas.height);
+            draw();
+        }
+
+        function canvas_keyDown(e){
+            if(AVAILABLE_KEYS.indexOf(e.keyCode)!=-1)
+            {
+                _keypressed[e.keyCode] = true;
+                doKeypress();
+            }
+        }
+        function canvas_keyUp(e){
+            if(_keypressed[e.keyCode])
+            {
+                _keypressed[e.keyCode] = false;
+                _ball.resetSpeed();
+            }
+        }
+
+        function doKeypress(){
+            if(_keypressed[Keys.UP_ARROW])
+                _ball.moveUp();
+            if(_keypressed[Keys.DOWN_ARROW])
+                _ball.moveDown();
+            if(_keypressed[Keys.LEFT_ARROW])
+                _ball.moveLeft();
+            if(_keypressed[Keys.RIGHT_ARROW])
+                _ball.moveRight();
+            _ball.move();
+            draw();
+        }
+        function draw() {
+            clear();
+            _ball.draw(_context);
+        }
+        window.onload = function(){
+            init();
+            _canvas.onkeydown = canvas_keyDown;
+            _canvas.onkeyup = canvas_keyUp;
+        }
+    </script>
+</head>
+<title> game lái xe </title>
+<body>
+
+<canvas id="canvas" width="300" height="200"
+        tabindex="1" style="border: 1px solid;"></canvas>
+</body>
+</html>
